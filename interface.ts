@@ -20,6 +20,7 @@ export interface ReservationItem {
   user: User;
   reserveDate: Date;
   coWorkingSpace: CoWorkingSpaceItem;
+  rating?: number;
 }
 
 export interface User {

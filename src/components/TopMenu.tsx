@@ -37,7 +37,6 @@ export default async function TopMenu() {
         </div>
       )}
       <TopMenuItem title="My Reservation" pageRef="/myreservation" />
-
       <TopMenuItem title="Reservation" pageRef="/reservation" />
       <Link key="home" href="/">
         <Image

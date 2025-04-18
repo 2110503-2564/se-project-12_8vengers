@@ -1,6 +1,6 @@
 export default async function updateReservation(rid: string, reserveDate: Date, token:string) {
     
-    const response = await fetch(`${process.env.BACKEND_URL}/api/v1/reservations/${rid}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/reservations/${rid}`, {
         method: "PUT",
         headers: {
             authorization: `Bearer ${token}`,
