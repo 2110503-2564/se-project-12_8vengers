@@ -166,6 +166,16 @@ export default function ReservationList() {
                 >
                   Edit Reservation
                 </button>
+
+                <button
+                  className="rounded-md bg-yellow-500 hover:bg-yellow-600 px-3 py-1 text-white shadow-sm text-sm"
+                  onClick={() => {
+                    router.push(`/reviews/${item._id}`);
+                  }}
+                >
+                  Review
+                </button>
+                
                 <div className="flex items-center justify-end flex-1">
                   <span className="text-md font-medium mr-2">Rate:</span>
                   <Rating
@@ -194,6 +204,7 @@ export default function ReservationList() {
           {snackbarMessage}
         </MuiAlert>
       </Snackbar>
+
     </main>
   );
 }

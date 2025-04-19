@@ -21,3 +21,4 @@ export default async function getAverageRating(coworkingSpaceId: string, token: 
     count: data.count || 0,
   };
 }
+
