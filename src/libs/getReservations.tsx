@@ -14,6 +14,6 @@ export default async function getReservations(token: string) {
   }
 
   const data = await response.json();
-
+  console.log("Reservations:", data);
   return data;
 }

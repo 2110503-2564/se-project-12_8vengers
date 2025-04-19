@@ -1,0 +1,31 @@
+@startuml
+left to right direction
+actor "User" as user
+rectangle "Co-working Space Reservation" as CoWS {
+    usecase "Register" as register
+    usecase "Login/Logout" as log
+    usecase "View\nCo-working Space" as viewC
+    usecase "Manage\nCo-working Space" as manageC
+    usecase "View own\nReservation" as viewOwnR
+    usecase "View all\nReservation" as viewAllR
+    usecase "Manage own\nReservation" as manageOwnR
+    usecase "Manage all\nReservation" as manageAllR
+
+
+}
+
+user -- register
+user -- log
+user -- viewOwnR
+user -- manageOwnR
+user -- viewC
+
+actor "Admin" as admin
+register -- admin
+log -- admin
+viewAllR -- admin
+manageAllR -- admin
+viewC -- admin
+manageC -- admin
+
+@enduml

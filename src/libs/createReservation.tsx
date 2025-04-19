@@ -16,4 +16,3 @@ export default async function createReservation(
   
     return await response.json();
   }
-  

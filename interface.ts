@@ -20,6 +20,7 @@ export interface ReservationItem {
   user: User;
   reserveDate: Date;
   coWorkingSpace: CoWorkingSpaceItem;
+  rating?: number;
 }
 
 export interface User {
@@ -30,3 +31,14 @@ export interface User {
   tel: string;
   createdAt: Date;
 }
+
+export interface Review {
+  _id: string;
+  user: string | User;
+  reservationId: string | ReservationItem;
+  comment: string;
+  createdAt: Date;
+  updatedAt: Date;
+  __v?: number;
+}
+
