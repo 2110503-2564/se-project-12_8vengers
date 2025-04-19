@@ -1,4 +1,3 @@
-// "use client"; เพิ่มบรรทัดนี้ที่ด้านบนสุด
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
@@ -32,11 +31,18 @@ export default function ReviewFormPage() {
 
           const review = await getReview(session.user.token, reservationId);
 
-          console.log("✅ Review fetched:", review);
-
           if (review?.data && Array.isArray(review.data)) {
-            setOldComments(review.data);  // ใช้ข้อมูลที่ได้จาก backend
+            if (review.data.length === 0) {
+              setMessage("You haven't written a review yet.");
+              setOldComments([]);
+            } else {
+              setOldComments(review.data);
+              setMessage("");
+            }
           }          
+
+          console.log("✅ Review fetched:", review);
+        
         } catch (err) {
           console.error("❌ Error fetching review:", err);
           setMessage("Failed to fetch review.");
