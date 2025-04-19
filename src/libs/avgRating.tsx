@@ -14,5 +14,10 @@ export default async function getAverageRating(coworkingSpaceId: string, token: 
   }
 
   const data = await response.json();
-  return data.average || 0;
+
+  // แก้ตรงนี้ให้ return ทั้ง average และ count
+  return {
+    average: data.average || 0,
+    count: data.count || 0,
+  };
 }
