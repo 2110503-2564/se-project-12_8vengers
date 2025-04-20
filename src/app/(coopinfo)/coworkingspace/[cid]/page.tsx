@@ -1,5 +1,6 @@
 import Image from "next/image";
 import getCoworkingSpace from "@/libs/getCoworkingSpace";
+import getReviewsByCoop from "@/libs/getReviewsByCoop";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import Link from "next/link";
@@ -23,6 +24,7 @@ export default async function CoopDetailPage({
     );
 
   const coopDetail = await getCoworkingSpace(params.cid, session.user.token);
+  const reviews = await getReviewsByCoop(session.user.token, params.cid);
 
   return (
     <main
@@ -51,6 +53,24 @@ export default async function CoopDetailPage({
               Make Reservation
             </button>
           </Link>
+        </div>
+      </div>
+
+      {/* Display Reviews Section */}
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold">Reviews</h2>
+        <div className="mt-4">
+          {reviews.data.length === 0 ? (
+            <p>No reviews yet.</p>
+          ) : (
+            reviews.data.map((review: any) => (
+              <div key={review._id} className="mb-4 p-4 border rounded-lg shadow-md">
+                <div className="font-bold">{review.user.name}</div>
+                <p className="text-xl font-serif text-gray-800 leading-relaxed">{review.comment}</p>
+                <small>{new Date(review.createdAt).toLocaleDateString()}</small>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </main>
