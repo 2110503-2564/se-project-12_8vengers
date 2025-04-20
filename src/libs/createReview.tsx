@@ -1,7 +1,8 @@
 export default async function createReview(
   token: string,
   reservationId: string,
-  comment: string
+  comment: string,
+  coWorkingSpaceId: string
 ) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/reviews/${reservationId}`,
@@ -11,9 +12,13 @@ export default async function createReview(
         authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ comment }),
+      body: JSON.stringify({
+        comment,
+        coWorkingSpaceId,
+      }),
     }
   );
 
   return await response.json();
 }
+

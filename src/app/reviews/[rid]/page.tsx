@@ -6,7 +6,8 @@ import { TextField, Button, Typography, Card, CardContent, Box, Modal } from "@m
 import { useState, useEffect } from "react";
 import createReview from "@/libs/createReview";
 import getReview from "@/libs/getReview";
-import { editReview } from "@/libs/editReview"; // เพิ่มการ import editReview
+import { editReview } from "@/libs/editReview"; 
+import getReservation from "@/libs/getReservation";
 
 export default function ReviewFormPage() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function ReviewFormPage() {
 
   const reservationId = Array.isArray(rid) ? rid[0] : rid;
 
+  const [coWorkingSpaceId, setCoWorkingSpaceId] = useState<string | null>(null);
   const [oldComments, setOldComments] = useState<any[]>([]);  // เปลี่ยนเป็น Array ที่มีข้อมูลรีวิว
   const [newComment, setNewComment] = useState("");
   const [message, setMessage] = useState("");
@@ -23,14 +25,14 @@ export default function ReviewFormPage() {
 
   useEffect(() => {
     console.log("⏳ useEffect called with:", { reservationId, session });
-
+  
     if (reservationId && session?.user.token) {
-      const fetchReview = async () => {
+      const fetchReviewAndReservation = async () => {
         try {
+          // 🔍 Fetch review
           console.log("📡 Fetching review for reservationId:", reservationId);
-
           const review = await getReview(session.user.token, reservationId);
-
+  
           if (review?.data && Array.isArray(review.data)) {
             if (review.data.length === 0) {
               setMessage("You haven't written a review yet.");
@@ -39,47 +41,53 @@ export default function ReviewFormPage() {
               setOldComments(review.data);
               setMessage("");
             }
-          }          
-
+          }
+  
           console.log("✅ Review fetched:", review);
-        
+  
+          // 🔍 Fetch reservation to get coWorkingSpaceId
+          console.log("📡 Fetching reservation for coWorkingSpaceId...");
+          const reservationData = await getReservation(reservationId, session.user.token);
+          const coworkingId = reservationData?.data?.coWorkingSpace;
+  
+          if (coworkingId) {
+            console.log("🏢 coWorkingSpaceId found:", coworkingId);
+            setCoWorkingSpaceId(coworkingId);
+          } else {
+            console.warn("⚠️ coWorkingSpaceId not found in reservation.");
+          }
         } catch (err) {
-          console.error("❌ Error fetching review:", err);
-          setMessage("Failed to fetch review.");
+          console.error("❌ Error during fetch:", err);
+          setMessage("Failed to fetch review or reservation.");
         }
       };
-      fetchReview();
+  
+      fetchReviewAndReservation();
     } else {
       console.log("🚫 reservationId or token is missing.");
     }
   }, [reservationId, session?.user.token]);
+  
 
   const handleSubmit = async () => {
-    console.log("🚀 Submitting review with:", {
-      token: session?.user.token,
-      reservationId,
-      comment: newComment,
-    });
-
-    if (!reservationId) {
-      setMessage("Reservation ID is required.");
+    if (!reservationId || !coWorkingSpaceId) {
+      setMessage("Missing reservation or coworking space ID.");
       return;
     }
-
+  
     if (newComment.trim() === "") {
       setMessage("Please provide a comment.");
       return;
     }
-
+  
     try {
       const res = await createReview(
         session?.user.token as string,
         reservationId,
-        newComment
+        newComment,
+        coWorkingSpaceId
       );
-
-      console.log("✅ Review created response:", res);
-
+  
       if (res.success) {
         alert("Review submitted successfully!");
         router.push("/myreservation");
@@ -91,6 +99,8 @@ export default function ReviewFormPage() {
       setMessage("An unexpected error occurred.");
     }
   };
+  
+  
 
   const handleEdit = (commentId: string, currentComment: string) => {
     setEditingComment(commentId);

@@ -5,7 +5,7 @@ export default async function getReservations(token: string) {
       method: "GET",
       headers: {
         authorization: `Bearer ${token}`,
-      },
+      },  
     }
   );
 
