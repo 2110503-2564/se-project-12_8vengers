@@ -1,1 +1,0 @@
-Vercel: https://cws-frontend-black.vercel.app/
