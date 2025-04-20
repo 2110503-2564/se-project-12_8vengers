@@ -145,7 +145,6 @@ export default function ReservationList() {
         </div>
       ) : (
         reservationItems.map((item) => {
-          console.log("Reservation Item:", item);
           const avgData = avgRatingMap[item.coWorkingSpace._id];
           return (
             <div

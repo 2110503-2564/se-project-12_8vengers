@@ -14,7 +14,8 @@ import {
 import { useState, useEffect } from "react";
 import createReview from "@/libs/createReview";
 import getReview from "@/libs/getReview";
-import { editReview } from "@/libs/editReview";
+import editReview from "@/libs/editReview";
+import deleteReview from "@/libs/deleteReview";
 import getReservation from "@/libs/getReservation";
 
 export default function ReviewFormPage() {
@@ -137,6 +138,29 @@ export default function ReviewFormPage() {
     }
   };
 
+  const handleDelete = async (commentId: string) => {
+    if (confirm("Are you sure you want to delete this comment?")) {
+      try {
+        const response = await deleteReview(
+          session?.user.token as string,
+          commentId
+        );
+
+        if (response.ok) {
+          setOldComments((prev) =>
+            prev.filter((review) => review._id !== commentId)
+          );
+          alert("Review deleted successfully!");
+        } else {
+          alert("Failed to delete review.");
+        }
+      } catch (error) {
+        console.error("Error deleting review:", error);
+        alert("An error occurred while deleting the review.");
+      }
+    }
+  };
+
   if (!reservationId || !session?.user.token) {
     console.log("⏳ Waiting for reservationId and token to load...");
     return <div>Loading...</div>;
@@ -155,14 +179,20 @@ export default function ReviewFormPage() {
             oldComments.map((review, index) => (
               <Card key={review._id} variant="outlined" className="mb-4">
                 <CardContent>
-                  <div className="whitespace-pre-line mb-2">
+                  <div className="whitespace-pre-line text-lg mb-2">
                     {review.comment}
                   </div>
                   <button
                     onClick={() => handleEdit(review._id, review.comment)}
-                    className="px-2 py-1 bg-white text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200"
+                    className="px-3 py-1 mr-1 bg-white text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200"
                   >
                     Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(review._id)}
+                    className="px-3 py-1 mr-1 bg-white text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
+                  >
+                    Delete
                   </button>
                 </CardContent>
               </Card>

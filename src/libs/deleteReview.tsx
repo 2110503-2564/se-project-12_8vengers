@@ -1,24 +1,22 @@
-export default async function editReview(
+export default async function deleteReview(
     token: string,
-    reviewId: string,
-    comment: string
+    reviewId: string
   ) {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/reviews/${reviewId}`,
       {
-        method: "PUT",
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ comment }),
       }
     );
   
     if (!response.ok) {
-      throw new Error("Failed to update review");
+      throw new Error(response.statusText);
     }
   
-    return await response.json();
+    return response;
   }
   
