@@ -5,16 +5,15 @@ import getCoworkingSpace from "@/libs/getCoworkingSpace";
 import getReviewsByCoop from "@/libs/getReviewsByCoop";
 import checkUserRatingStatus from "@/libs/checkUserRatingStatus";
 import rateReservation from "@/libs/rateReservation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import Link from "next/link";
 import Rating from '@mui/material/Rating';
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function CoopDetailPage({ params }: { params: { cid: string } }) {
-  const [session, setSession] = useState<any>(null);
+  const { data: session } = useSession();
   const [coopDetail, setCoopDetail] = useState<any>(null);
   const [reviews, setReviews] = useState<any[]>([]);
   const [hasReserved, setHasReserved] = useState(false);
@@ -34,14 +33,12 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
 
   useEffect(() => {
     const fetchData = async () => {
-      const s = await getServerSession(authOptions);
-      if (!s || !s.user.token) return;
-      setSession(s);
+      if (!session?.user.token) return;
 
       const [coopRes, reviewRes, ratingStatus] = await Promise.all([
-        getCoworkingSpace(params.cid, s.user.token),
-        getReviewsByCoop(s.user.token, params.cid),
-        checkUserRatingStatus(params.cid, s.user.token),
+        getCoworkingSpace(params.cid, session.user.token),
+        getReviewsByCoop(session.user.token, params.cid),
+        checkUserRatingStatus(params.cid, session.user.token),
       ]);
 
       setCoopDetail(coopRes.data);
@@ -52,7 +49,7 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
     };
 
     fetchData();
-  }, []);
+  }, [session]);
 
   const handleRating = async (value: number | null) => {
     if (!session?.user.token || !hasReserved || value === null) return;
@@ -84,7 +81,7 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
   return (
     <main className="w-[80%] bg-white p-6 rounded-lg shadow-6xl flex flex-col space-y-4 border border-gray-300 mx-auto my-20">
       <h1 className="text-2xl font-bold">{coopDetail.name}</h1>
-      <div className="flex flex-row my-5 ">
+      <div className="flex flex-row my-5">
         <Image
           src="/img/mockimage.avif"
           alt="Coop Image"
