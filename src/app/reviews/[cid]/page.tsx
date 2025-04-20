@@ -16,16 +16,14 @@ import createReview from "@/libs/createReview";
 import getReview from "@/libs/getReview";
 import editReview from "@/libs/editReview";
 import deleteReview from "@/libs/deleteReview";
-import getReservation from "@/libs/getReservation";
 
 export default function ReviewFormPage() {
   const router = useRouter();
-  const { rid } = useParams();
+  const { cid } = useParams();
   const { data: session } = useSession();
 
-  const reservationId = Array.isArray(rid) ? rid[0] : rid;
+  const coWorkingSpaceId = Array.isArray(cid) ? cid[0] : cid;
 
-  const [coWorkingSpaceId, setCoWorkingSpaceId] = useState<string | null>(null);
   const [oldComments, setOldComments] = useState<any[]>([]); // เปลี่ยนเป็น Array ที่มีข้อมูลรีวิว
   const [newComment, setNewComment] = useState("");
   const [message, setMessage] = useState("");
@@ -33,14 +31,14 @@ export default function ReviewFormPage() {
   const [editedText, setEditedText] = useState(""); // ค่าที่จะถูกแก้ไข
 
   useEffect(() => {
-    console.log("⏳ useEffect called with:", { reservationId, session });
+    console.log("⏳ useEffect called with:", { coWorkingSpaceId, session });
 
-    if (reservationId && session?.user.token) {
-      const fetchReviewAndReservation = async () => {
+    if (coWorkingSpaceId && session?.user.token) {
+      const fetchReview = async () => {
         try {
           // 🔍 Fetch review
-          console.log("📡 Fetching review for reservationId:", reservationId);
-          const review = await getReview(session.user.token, reservationId);
+          console.log("📡 Fetching review for coWorkingSpaceId:", coWorkingSpaceId);
+          const review = await getReview(session.user.token, coWorkingSpaceId);
 
           if (review?.data && Array.isArray(review.data)) {
             if (review.data.length === 0) {
@@ -52,37 +50,21 @@ export default function ReviewFormPage() {
             }
           }
 
-          console.log("✅ Review fetched:", review);
-
-          // 🔍 Fetch reservation to get coWorkingSpaceId
-          console.log("📡 Fetching reservation for coWorkingSpaceId...");
-          const reservationData = await getReservation(
-            reservationId,
-            session.user.token
-          );
-          const coworkingId = reservationData?.data?.coWorkingSpace;
-
-          if (coworkingId) {
-            console.log("🏢 coWorkingSpaceId found:", coworkingId);
-            setCoWorkingSpaceId(coworkingId);
-          } else {
-            console.warn("⚠️ coWorkingSpaceId not found in reservation.");
-          }
         } catch (err) {
           console.error("❌ Error during fetch:", err);
-          setMessage("Failed to fetch review or reservation.");
+          setMessage("Failed to fetch review");
         }
       };
 
-      fetchReviewAndReservation();
+      fetchReview();
     } else {
       console.log("🚫 reservationId or token is missing.");
     }
-  }, [reservationId, session?.user.token]);
+  }, [coWorkingSpaceId, session?.user.token]);
 
   const handleSubmit = async () => {
-    if (!reservationId || !coWorkingSpaceId) {
-      setMessage("Missing reservation or coworking space ID.");
+    if (!coWorkingSpaceId) {
+      setMessage("Missing coworking space ID.");
       return;
     }
 
@@ -94,14 +76,13 @@ export default function ReviewFormPage() {
     try {
       const res = await createReview(
         session?.user.token as string,
-        reservationId,
         newComment,
         coWorkingSpaceId
       );
 
       if (res.success) {
         alert("Review submitted successfully!");
-        router.push("/myreservation");
+        router.push("/coworkingspace/" + coWorkingSpaceId);
       } else {
         setMessage(res.message || "Failed to submit review.");
       }
@@ -121,7 +102,7 @@ export default function ReviewFormPage() {
       setMessage("Please provide a valid comment.");
       return;
     }
-
+  
     try {
       await editReview(
         session?.user.token as string,
@@ -130,13 +111,27 @@ export default function ReviewFormPage() {
       );
       setMessage("Review updated successfully.");
       setEditingComment(null);
-      setEditedText(""); // Clear the text after saving
-      // You may need to re-fetch the reviews or update the local state after editing
+      setEditedText("");
+  
+      if (session) {
+        const refresh = await getReview(session.user.token, coWorkingSpaceId);
+
+        if (refresh?.data && Array.isArray(refresh.data)) {
+          if (refresh.data.length === 0) {
+            setMessage("You haven't written a review yet.");
+            setOldComments([]);
+          } else {
+            setOldComments(refresh.data);
+            setMessage("");
+          }
+        }
+      }
     } catch (error) {
       setMessage("Failed to update review.");
       console.error(error);
     }
   };
+  
 
   const handleDelete = async (commentId: string) => {
     if (confirm("Are you sure you want to delete this comment?")) {
@@ -161,13 +156,13 @@ export default function ReviewFormPage() {
     }
   };
 
-  if (!reservationId || !session?.user.token) {
-    console.log("⏳ Waiting for reservationId and token to load...");
+  if (!coWorkingSpaceId || !session?.user.token) {
+    console.log("⏳ Waiting for coWorkingSpaceId and token to load...");
     return <div>Loading...</div>;
   }
 
   return (
-    <main className="max-w-5xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
+    <main className="max-w-5xl mx-auto mt-20 bg-white p-6 rounded-lg shadow-md">
       <div className="font-bold text-2xl mb-4">Add new Comments</div>
 
       <div className="flex flex-col md:flex-row gap-6 mt-6">

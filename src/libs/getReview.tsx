@@ -1,9 +1,6 @@
-export default async function getReview(token: string, reservationId: string) {
-  if (!reservationId) {
-    throw new Error("Missing reservationId");
-  }
+export default async function getReview(token: string, coWorkingSpaceId: string) {
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/reviews/${reservationId}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/reviews/${coWorkingSpaceId}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,

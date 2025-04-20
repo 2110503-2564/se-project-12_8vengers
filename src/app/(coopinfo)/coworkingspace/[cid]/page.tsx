@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Image from "next/image";
 import getCoworkingSpace from "@/libs/getCoworkingSpace";
@@ -6,13 +6,18 @@ import getReviewsByCoop from "@/libs/getReviewsByCoop";
 import checkUserRatingStatus from "@/libs/checkUserRatingStatus";
 import rateReservation from "@/libs/rateReservation";
 import Link from "next/link";
-import Rating from '@mui/material/Rating';
+import Rating from "@mui/material/Rating";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
-export default function CoopDetailPage({ params }: { params: { cid: string } }) {
+export default function CoopDetailPage({
+  params,
+}: {
+  params: { cid: string };
+}) {
   const { data: session } = useSession();
   const [coopDetail, setCoopDetail] = useState<any>(null);
   const [reviews, setReviews] = useState<any[]>([]);
@@ -21,6 +26,9 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
   const [hasRated, setHasRated] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMsg, setSnackbarMsg] = useState("");
+
+  const router = useRouter();
+  const { cid } = useParams();
 
   const showSnackbar = (msg: string) => {
     setSnackbarMsg(msg);
@@ -67,8 +75,10 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
 
   if (!session) {
     return (
-      <main className="w-full h-screen flex flex-col items-center justify-center space-y-4 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/img/background.avif')" }}>
+      <main
+        className="w-full h-screen flex flex-col items-center justify-center space-y-4 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/img/background.avif')" }}
+      >
         <div className="w-[20%] bg-red-600 p-6 rounded-lg shadow-6xl flex flex-col items-center space-y-4 mx-auto my-20 font-bold text-2xl text-gray-800">
           Please Sign in
         </div>
@@ -76,7 +86,17 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
     );
   }
 
-  if (!coopDetail) return <p className="text-center my-20">Loading...</p>;
+  if (!coopDetail)
+    return (
+      <main
+        className="w-full h-screen flex flex-col items-center justify-center space-y-4 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/img/background.avif')" }}
+      >
+        <div className="w-[20%] p-6 rounded-lg shadow-6xl flex flex-col items-center space-y-4 mx-auto my-20 font-bold text-2xl text-white">
+          Loading...
+        </div>
+      </main>
+    );
 
   return (
     <main className="w-[80%] bg-white p-6 rounded-lg shadow-6xl flex flex-col space-y-4 border border-gray-300 mx-auto my-20">
@@ -103,15 +123,29 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
           </Link>
 
           {hasReserved ? (
-            <div className="mt-6">
-              <div className="text-md font-semibold mb-1">Rate this Space:</div>
-              <Rating
-                value={rating}
-                onChange={(_, newVal) => handleRating(newVal)}
-              />
+            <div>
+              <div className="mt-6">
+                <div className="text-md font-semibold mb-1">
+                  Rate this Space:
+                </div>
+                <Rating
+                  value={rating}
+                  onChange={(_, newVal) => handleRating(newVal)}
+                />
+              </div>
+              <button
+                className="rounded-md bg-yellow-500 hover:bg-yellow-600 px-3 py-1 hover:text-white shadow-sm text-sm"
+                onClick={() => {
+                  router.push(`/reviews/${cid}`);
+                }}
+              >
+                Review
+              </button>
             </div>
           ) : (
-            <p className="text-sm text-gray-500 mt-4">You must reserve before rating.</p>
+            <p className="text-sm text-gray-500 mt-4">
+              You must reserve before rating.
+            </p>
           )}
         </div>
       </div>
@@ -123,9 +157,14 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
             <p>No reviews yet.</p>
           ) : (
             reviews.map((review: any) => (
-              <div key={review._id} className="mb-4 p-4 border rounded-lg shadow-md">
+              <div
+                key={review._id}
+                className="mb-4 p-4 border rounded-lg shadow-md"
+              >
                 <div className="font-bold">{review.user.name}</div>
-                <p className="text-xl font-serif text-gray-800 leading-relaxed">{review.comment}</p>
+                <p className="text-xl font-serif text-gray-800 leading-relaxed">
+                  {review.comment}
+                </p>
                 <small>{new Date(review.createdAt).toLocaleDateString()}</small>
               </div>
             ))
@@ -133,8 +172,16 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
         </div>
       </div>
 
-      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar}>
-        <MuiAlert severity="info" onClose={handleCloseSnackbar} sx={{ width: '100%' }}>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <MuiAlert
+          severity="info"
+          onClose={handleCloseSnackbar}
+          sx={{ width: "100%" }}
+        >
           {snackbarMsg}
         </MuiAlert>
       </Snackbar>
