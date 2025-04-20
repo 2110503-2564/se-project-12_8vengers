@@ -1,5 +1,4 @@
 import Image from "next/image";
-import getVenue from "@/libs/getCoworkingSpace";
 import getCoworkingSpace from "@/libs/getCoworkingSpace";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
