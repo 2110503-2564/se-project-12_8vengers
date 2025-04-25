@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 
+import { CSSProperties } from 'react';
+
 const TopUpForm = () => {
   const [amount, setAmount] = useState('');
   const [balance, setBalance] = useState(0);
@@ -30,7 +32,7 @@ const TopUpForm = () => {
     fetchBalance();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (parseInt(amount) < 50) {
@@ -59,9 +61,11 @@ const TopUpForm = () => {
         setMessage('Top up failed: ' + data.error);
       }
     } catch (error) {
-      console.error('Top up error:', error);
-      setMessage('Top up failed: ' + error.message);
-    }
+        console.error('Top up error:', error);
+        // ตรวจสอบว่า error เป็นอ็อบเจกต์ที่มี property 'message' หรือไม่
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred.';
+        setMessage('Top up failed: ' + errorMessage);
+      }
   };
 
   return (
@@ -101,7 +105,7 @@ const TopUpForm = () => {
   );
 };
 
-const styles = {
+const styles: { [key: string]: CSSProperties } = {
   container: {
     maxWidth: '400px',
     margin: 'auto',
