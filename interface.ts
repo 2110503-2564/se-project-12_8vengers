@@ -7,6 +7,7 @@ export interface CoWorkingSpaceItem {
   open_time: string;
   close_time: string;
   price: string;
+  desc: string;
 }
 
 export interface CoWorkingSpaceJson {

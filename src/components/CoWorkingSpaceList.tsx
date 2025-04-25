@@ -18,6 +18,7 @@ export default async function CoWorkingSpaceList({ coopJson }: { coopJson: CoWor
               open_time={coop.open_time}
               close_time={coop.close_time}
               price={coop.price}
+              desc={coop.desc}
             />
           </Link>
         ))}

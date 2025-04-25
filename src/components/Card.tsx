@@ -9,6 +9,7 @@ export default function Card({
   open_time,
   close_time,
   price,
+  desc,
 }: {
   coopName: string;
   address: string;
@@ -16,6 +17,7 @@ export default function Card({
   open_time: string;
   close_time: string;
   price: string;
+  desc:string;
 }) {
   return (
     <InteractiveCard>
@@ -26,6 +28,7 @@ export default function Card({
         <div className="text-sm m-1">Open Time: {open_time}</div>
         <div className="text-sm m-1">Close Time: {close_time}</div>
         <div className="text-sm m-1">Price: {price} /hour</div>
+        <div className="text-sm m-1">Description: {desc}</div>
         <Image
           src="/img/mockimage.avif"
           alt="Coop Image"
