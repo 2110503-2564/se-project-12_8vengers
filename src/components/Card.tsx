@@ -8,12 +8,14 @@ export default function Card({
   tel,
   open_time,
   close_time,
+  price,
 }: {
   coopName: string;
   address: string;
   tel: string;
   open_time: string;
   close_time: string;
+  price: string;
 }) {
   return (
     <InteractiveCard>
@@ -23,6 +25,7 @@ export default function Card({
         <div className="text-sm m-1">Tel. : {tel}</div>
         <div className="text-sm m-1">Open Time: {open_time}</div>
         <div className="text-sm m-1">Close Time: {close_time}</div>
+        <div className="text-sm m-1">Price: {price} /hour</div>
         <Image
           src="/img/mockimage.avif"
           alt="Coop Image"

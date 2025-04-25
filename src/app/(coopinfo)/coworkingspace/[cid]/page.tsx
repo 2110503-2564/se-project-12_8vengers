@@ -115,6 +115,7 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
           <div>Tel: {coopDetail.tel}</div>
           <div>Open time: {coopDetail.open_time}</div>
           <div>Close time: {coopDetail.close_time}</div>
+          <div>Price: {coopDetail.price} /hour</div>
           <Link href="/reservation">
             <button className="rounded-md bg-blue-600 hover:bg-green-600 px-3 py-1 text-white shadow-sm text-md mr-3 mt-5">
               Make Reservation
