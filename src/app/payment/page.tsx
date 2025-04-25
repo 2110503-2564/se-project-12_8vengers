@@ -14,7 +14,7 @@ const TopUpForm = () => {
   useEffect(() => {
     const fetchBalance = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/v1/auth/me', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/me`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const TopUpForm = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/v1/payment', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
