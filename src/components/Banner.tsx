@@ -44,12 +44,12 @@ export default function Banner() {
           Empowering your ideas in a dynamic workspace.
         </h3>
         <button
-          className="mt-6 bg-white font-semibold py-2 px-4 rounded z-30
+        className="mt-6 bg-white font-semibold py-2 px-4 rounded z-30
                 hover:bg-gray-800 hover:text-white hover:border-transparent"
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push("/coworkingspace");
-          }}
+        onClick={(e) => {
+        e.stopPropagation();
+        router.push("/coworkingspace");
+        }}
         >
           Select Co-Working Space
         </button>
