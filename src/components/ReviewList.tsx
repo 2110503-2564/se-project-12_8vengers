@@ -1,7 +1,7 @@
 // components/ReviewList.tsx
 import React, { useState } from "react";
 import { Button, Modal, TextField, Box, Typography } from "@mui/material";
-import { editReview } from "@/libs/editReview";
+import  editReview  from "@/libs/editReview";
 
 interface Review {
   _id: string;
