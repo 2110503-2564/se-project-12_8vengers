@@ -7,22 +7,25 @@ export default async function CoWorkingSpaceList({ coopJson }: { coopJson: CoWor
   const coWorkingSpaceDetail = JsonYay.data;
 
   return (
-    <div>
-      <div className="mx-5 flex flex-wrap justify-around gap-1 gap-y-[20px]">
-        {coWorkingSpaceDetail.map((coop: CoWorkingSpaceItem) => (
-          <Link key={coop._id} href={`/coworkingspace/${coop._id}`} className="w-1/5">
-            <Card
-              coopName={coop.name}
-              address={coop.address}
-              tel={coop.tel}
-              open_time={coop.open_time}
-              close_time={coop.close_time}
-              price={coop.price}
-              desc={coop.desc}
-            />
-          </Link>
-        ))}
-      </div>
-    </div>
+    <div className="px-6 py-8">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    {coWorkingSpaceDetail.map((coop: CoWorkingSpaceItem) => (
+      <Link key={coop._id} href={`/coworkingspace/${coop._id}`} className="block">
+        <div className="h-full">
+          <Card
+            coopName={coop.name}
+            address={coop.address}
+            tel={coop.tel}
+            open_time={coop.open_time}
+            close_time={coop.close_time}
+            price={coop.price}
+            desc={coop.desc}
+          />
+        </div>
+      </Link>
+    ))}
+  </div>
+</div>
+
   );
 }
