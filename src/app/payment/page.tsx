@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import getBalance from '@/libs/getBalance';
 
 import { CSSProperties } from 'react';
 
@@ -14,14 +15,7 @@ const TopUpForm = () => {
   useEffect(() => {
     const fetchBalance = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/me`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-
+        const res = await getBalance();
         const data = await res.json();
         setBalance(data.data?.balance || 0);
       } catch (err) {
@@ -49,7 +43,7 @@ const TopUpForm = () => {
         },
         body: JSON.stringify({
           token: token,
-          amount: parseInt(amount) * 100, // แปลงบาทเป็นสตางค์
+          amount: parseInt(amount) * 100, 
         }),
       });
 
@@ -77,7 +71,7 @@ const TopUpForm = () => {
           type="text"
           value={`${balance} บาท`}
           readOnly
-          style={styles.input} // ใช้สไตล์เดียวกับ input อื่น ๆ
+          style={styles.input}
         />
       </div>
       <form onSubmit={handleSubmit} style={styles.form}>

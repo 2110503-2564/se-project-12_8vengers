@@ -83,7 +83,6 @@ export default function ProfilePage() {
             </table>
           </div>
 
-        {/* ✅ ปุ่มไปหน้า /payment */}
         <div className="flex flex-row gap-x-4 mt-4">
           <Link href="/payment">
             <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow">
