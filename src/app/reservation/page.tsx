@@ -56,7 +56,13 @@ export default function Reservation() {
     fetchCoWorkingSpaces();
     setLoading(false);
   }, []);
-
+  const updateUserBalance = () => {
+    if (profile && selectedSpaceObj) {
+      const updatedBalance =
+        Number(profile.balance ?? 0) - Number(selectedSpaceObj.price ?? 0);
+      setProfile({ ...profile, balance: updatedBalance });
+    }
+  };
   const reservationInfoRef = useRef<HTMLDivElement>(null);
 
   const handleReservation = async () => {
@@ -65,6 +71,7 @@ export default function Reservation() {
       return;
     }
 
+    
     try {
       const response = await createReservation(
         session.user.token,
@@ -81,11 +88,11 @@ export default function Reservation() {
       setMessage("Unexpected Error Occured");
     }
   };
-  
-  const handleConfirmPayment = () => {
+  const handleConfirmPayment = async () => {
     const confirmed = window.confirm("Confirm payment?");
   
     if (confirmed) {
+      await updateUserBalance();
       alert("Reservation created successfully!");
     } else {
       alert("You cancelled the payment.");
