@@ -50,7 +50,7 @@ const TopUpForm = () => {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage(`Top up successful: ${data.charge.amount / 100} บาท`);
+        setMessage(`Top up successful: ${data.charge.amount / 100} Baht`);
       } else {
         setMessage('Top up failed: ' + data.error);
       }
@@ -69,7 +69,7 @@ const TopUpForm = () => {
         <label style={styles.label}> Current Balance:</label>
         <input
           type="text"
-          value={`${balance} บาท`}
+          value={`${balance} Baht`}
           readOnly
           style={styles.input}
         />
