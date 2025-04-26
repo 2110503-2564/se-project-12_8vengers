@@ -8,6 +8,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { CoWorkingSpaceItem, User } from "../../../interface";
 import { useSession } from "next-auth/react";
 import getCoWorkingSpaces from "@/libs/getCoWorkingSpaces";
+import { useRef } from "react";
 
 export default function Reservation() {
   const { data: session } = useSession();
@@ -29,6 +30,7 @@ export default function Reservation() {
   const [profile, setProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [message, setMessage] = useState("");
+  const [showReservationDetails, setShowReservationDetails] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -55,6 +57,8 @@ export default function Reservation() {
     setLoading(false);
   }, []);
 
+  const reservationInfoRef = useRef<HTMLDivElement>(null);
+
   const handleReservation = async () => {
     if (!session || !user || !selectedSpace || !reserveDate) {
       setMessage("All fields must be filled before submission.");
@@ -73,46 +77,32 @@ export default function Reservation() {
         return;
       }
 
-      alert("Reservation created successfully!");
     } catch (error) {
       setMessage("Unexpected Error Occured");
     }
   };
+  
+  const handleConfirmPayment = () => {
+    const confirmed = window.confirm("Confirm payment?");
+  
+    if (confirmed) {
+      alert("Reservation created successfully!");
+    } else {
+      alert("You cancelled the payment.");
+    }
+  };
+  
+  
 
   if (loading) {
     return <div className="text-center text-gray-500 text-lg">Loading...</div>;
   }
 
+  const selectedSpaceObj = coWorkingSpaces.find(space => space._id === selectedSpace);
+
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center space-y-4 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/img/background.avif')" }}>
       <div className="w-[40%] bg-white p-6 rounded-lg shadow-6xl flex flex-col items-center space-y-4 border border-gray-300 mx-auto my-20">
-        <div className="text-2xl font-bold">
-          {profile?.role === "admin" ? "Admin Profile" : "User Profile"}
-        </div>
-        <table className="table-auto border-separate border-spacing-2 bg-gray-200 rounded-xl p-4">
-          <tbody>
-            <tr>
-              <td className="text-md font-semibold text-black">Name</td>
-              <td>{profile?.name}</td>
-            </tr>
-            <tr>
-              <td className="text-md font-semibold text-black">Email</td>
-              <td>{profile?.email}</td>
-            </tr>
-            <tr>
-              <td className="text-md font-semibold text-black">Tel.</td>
-              <td>{profile?.tel}</td>
-            </tr>
-            <tr>
-              <td className="font-semibold text-gray-800">Current Balance</td>
-              <td>{profile?.balance}</td>
-            </tr>
-            <tr>
-              <td className="text-md font-semibold text-black">Member since</td>
-              <td>{profile ? new Date(profile.createdAt).toString() : "N/A"}</td>
-            </tr>
-          </tbody>
-        </table>
 
         <div className="text-2xl font-bold">New Reservation</div>
         <div className="w-fit">
@@ -154,9 +144,36 @@ export default function Reservation() {
           />
         </div>
 
-        <Button variant="contained" color="primary" onClick={handleReservation}>
+        <Button variant="contained" color="primary" onClick={() => setShowReservationDetails(true)}>
           Reserve Co-Working Space
         </Button>
+        
+        {showReservationDetails && (
+          <div ref={reservationInfoRef} className="w-[100%] table-auto border-separate border-spacing-2 bg-gray-200 rounded-xl p-6 mt-6">
+            <h2 className="text-xl font-semibold text-black">Reservation Details</h2>
+            <table className="text-black">
+              <tbody>
+                <tr>
+                  <td className="text-md font-semibold">Selected Space :</td>
+                  <td>{selectedSpaceObj?.name}</td>
+                </tr>
+                <tr>
+                  <td className="text-md font-semibold">Price :</td>
+                  <td>{selectedSpaceObj?.price} Baht</td>
+                </tr>
+                <tr>
+                  <td className="font-semibold">Current Balance :</td>
+                  <td>{profile?.balance}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="flex justify-center items-center">
+              <Button className="!bg-gray-700 !text-white !text-sm hover:!bg-gray-400 cursor-pointer" onClick={handleConfirmPayment}>
+                Pay
+              </Button>
+            </div>
+          </div>
+        )}
         <p className="text-red-500 mt-3">{message}</p>
       </div>
     </main>
