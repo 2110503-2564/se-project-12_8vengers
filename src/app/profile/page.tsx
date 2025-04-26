@@ -30,7 +30,10 @@ export default function ProfilePage() {
 
   if (!session || !session.user.token) {
     return (
-      <main className="w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/img/background.avif')" }}>
+      <main
+        className="w-full h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/img/background.avif')" }}
+      >
         <div className="bg-red-600 text-white p-6 rounded-lg shadow-lg text-center text-xl font-bold">
           Please sign in to view your profile.
         </div>
@@ -47,7 +50,10 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="w-full min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/img/background.avif')" }}>
+    <main
+      className="w-full min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/img/background.avif')" }}
+    >
       <div className="w-[40%] bg-white p-6 rounded-lg shadow-lg border border-gray-300 flex flex-col items-center space-y-6">
         <div className="text-2xl font-bold text-center">
           {profile?.role === "admin" ? "Admin Profile" : "User Profile"}
@@ -67,7 +73,7 @@ export default function ProfilePage() {
               <td>{profile?.tel}</td>
             </tr>
             <tr>
-              <td className="font-semibold text-gray-800">Current Balance.</td>
+              <td className="font-semibold text-gray-800">Current Balance</td>
               <td>{profile?.balance}</td>
             </tr>
             <tr>
@@ -77,20 +83,18 @@ export default function ProfilePage() {
           </tbody>
         </table>
 
-        {/* ✅ ปุ่มไปหน้า /payment */}
-    <div className="flex flex-row gap-x-4 mt-4">
-        <Link href="/payment">
+        <div className="flex flex-row gap-x-4 mt-4">
+          <Link href="/payment">
             <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow">
-            Top-up
+              Top-up
             </button>
-        </Link>
-        <Link href="/history">
+          </Link>
+          {/* <Link href="/history">
             <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow">
-            History
+              History
             </button>
-        </Link>
-    </div>
-
+          </Link> */}
+        </div>
       </div>
     </main>
   );
