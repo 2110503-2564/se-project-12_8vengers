@@ -67,6 +67,10 @@ export default function ProfilePage() {
               <td>{profile?.tel}</td>
             </tr>
             <tr>
+              <td className="font-semibold text-gray-800">Current Balance.</td>
+              <td>{profile?.balance}</td>
+            </tr>
+            <tr>
               <td className="font-semibold text-gray-800">Member since</td>
               <td>{profile ? new Date(profile.createdAt).toLocaleString() : "N/A"}</td>
             </tr>

@@ -104,6 +104,10 @@ export default function Reservation() {
               <td>{profile?.tel}</td>
             </tr>
             <tr>
+              <td className="font-semibold text-gray-800">Current Balance</td>
+              <td>{profile?.balance}</td>
+            </tr>
+            <tr>
               <td className="text-md font-semibold text-black">Member since</td>
               <td>{profile ? new Date(profile.createdAt).toString() : "N/A"}</td>
             </tr>
