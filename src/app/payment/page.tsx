@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, CSSProperties } from 'react';
+import { useSession } from "next-auth/react";
 import getBalance from '@/libs/getBalance';
 
-import { CSSProperties } from 'react';
-
 const TopUpForm = () => {
+  const { data: session } = useSession();
   const [amount, setAmount] = useState('');
   const [balance, setBalance] = useState(0);
-  const [token, setToken] = useState('');
   const [message, setMessage] = useState('');
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [chargeId, setChargeId] = useState('');
 
-// ดึง balance ปัจจุบัน
   useEffect(() => {
     const fetchBalance = async () => {
       try {
@@ -30,53 +30,93 @@ const TopUpForm = () => {
     e.preventDefault();
 
     if (parseInt(amount) < 50) {
-      setMessage('Minimum top-up amount is 50 Baht.');
+      setMessage('❗ Minimum top-up amount is 50 Baht.');
+      return;
+    }
+
+    if (!session?.user?.token) {
+      setMessage('❗ Missing token from session. Please sign in again.');
       return;
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/payment`, {
+      const res = await fetch("/api/charge", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${session.user.token}`,
         },
         body: JSON.stringify({
-          token: token,
-          amount: parseInt(amount) * 100, 
+          amount: parseInt(amount) * 100,
         }),
       });
 
       const data = await res.json();
 
-      if (res.ok) {
-        setMessage(`Top up successful: ${data.charge.amount / 100} บาท`);
+      if (res.ok && data.qrCode && data.chargeId) {
+        setQrCodeUrl(data.qrCode);
+        setChargeId(data.chargeId);
+        setMessage('✅ Please scan the QR code to complete your payment.');
       } else {
-        setMessage('Top up failed: ' + data.error);
+        setMessage('❌ Top up failed: ' + (data.message || "Unknown error"));
       }
     } catch (error) {
-        console.error('Top up error:', error);
-        // ตรวจสอบว่า error เป็นอ็อบเจกต์ที่มี property 'message' หรือไม่
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred.';
-        setMessage('Top up failed: ' + errorMessage);
+      console.error('Top-up error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred.';
+      setMessage('❌ Top up failed: ' + errorMessage);
+    }
+  };
+
+  const handleCheckPayment = async () => {
+    if (!chargeId) {
+      setMessage('❗ No charge ID found.');
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/check-payment?chargeId=${chargeId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session?.user?.token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setMessage('✅ Top up completed! Your balance has been updated.');
+        setQrCodeUrl('');
+        setChargeId('');
+        window.location.reload();
+      } else {
+        setMessage('❗ Payment not completed yet: ' + (data.message || 'Unknown error'));
       }
+    } catch (error) {
+      console.error('Check payment error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred.';
+      setMessage('❗ Failed to check payment: ' + errorMessage);
+    }
   };
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.heading}>Top Up Amount</h2>
+      <h2 style={styles.heading}>Top Up Your Balance</h2>
+
+      {/* Current Balance */}
       <div style={styles.inputGroup}>
-        <label style={styles.label}> Current Balance:</label>
+        <label style={styles.label}>Current Balance:</label>
         <input
           type="text"
-          value={`${balance} บาท`}
+          value={`${balance.toLocaleString()} Baht`}
           readOnly
           style={styles.input}
         />
       </div>
+
+      {/* Top Up Form */}
       <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.inputGroup}>
-          <label style={styles.label}>Please enter amount (baht):</label>
+          <label style={styles.label}>Enter Top-Up Amount (Baht):</label>
           <input
             type="number"
             value={amount}
@@ -85,15 +125,31 @@ const TopUpForm = () => {
             min="1"
             style={styles.input}
           />
-          <p style={styles.minAmountText}>Minimum amount to top-up 50 Baht</p>
+          <p style={styles.minAmountText}>* Minimum 50 Baht</p>
         </div>
-        <button
-          type="submit"
-          style={styles.button}
-        >
+
+        <button type="submit" style={styles.button}>
           Top Up
         </button>
       </form>
+
+      {/* QR Code and Check Payment */}
+      {qrCodeUrl && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <p>Please scan the QR code below to complete your payment:</p>
+          <img src={qrCodeUrl} alt="PromptPay QR" style={{ width: 300, height: 300 }} />
+          <p>Charge ID: {chargeId}</p>
+
+          <button
+            onClick={handleCheckPayment}
+            style={{ ...styles.button, backgroundColor: "#00b894", marginTop: "20px" }}
+          >
+            Check Payment Status
+          </button>
+        </div>
+      )}
+
+      {/* Message */}
       {message && <p style={styles.message}>{message}</p>}
     </div>
   );
@@ -104,20 +160,13 @@ const styles: { [key: string]: CSSProperties } = {
     maxWidth: '400px',
     margin: 'auto',
     padding: '20px',
-    backgroundColor: '#f0f8ff', // ฟ้าอ่อน
+    backgroundColor: '#f0f8ff',
     borderRadius: '8px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
   heading: {
     textAlign: 'center',
     color: '#0077b6',
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-  },
-  balanceText: {
-    textAlign: 'center',
-    fontSize: '16px',
-    color: '#0077b6',
-    marginBottom: '20px',
   },
   form: {
     display: 'flex',
@@ -143,11 +192,11 @@ const styles: { [key: string]: CSSProperties } = {
   },
   minAmountText: {
     fontSize: '14px',
-    color: '#6c757d', // สีเทาสำหรับข้อความ
+    color: '#6c757d',
     marginTop: '6px',
   },
   button: {
-    backgroundColor: '#0077b6', // ฟ้าเข้ม
+    backgroundColor: '#0077b6',
     color: '#fff',
     border: 'none',
     padding: '12px 20px',
@@ -155,9 +204,6 @@ const styles: { [key: string]: CSSProperties } = {
     borderRadius: '4px',
     cursor: 'pointer',
     transition: 'background-color 0.3s',
-  },
-  buttonHover: {
-    backgroundColor: '#005f7f', // สีเข้มเมื่อ hover
   },
   message: {
     marginTop: '20px',
