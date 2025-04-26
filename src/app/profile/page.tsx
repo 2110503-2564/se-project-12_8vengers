@@ -58,30 +58,30 @@ export default function ProfilePage() {
         <div className="text-2xl font-bold text-center">
           {profile?.role === "admin" ? "Admin Profile" : "User Profile"}
         </div>
-          <div className="p-4 w-full bg-gray-200 rounded-xl">
-            <table className="table-auto w-full text-left border-spacing-2">
-            <tbody>
-              <tr>
-                <td className="font-semibold text-gray-800">Name</td>
-                <td>{profile?.name}</td>
-              </tr>
-              <tr>
-                <td className="font-semibold text-gray-800">Email</td>
-                <td>{profile?.email}</td>
-              </tr>
-              <tr>
-                <td className="font-semibold text-gray-800">Tel.</td>
-                <td>{profile?.tel}</td>
-              </tr>
-              <tr>
-                <td className="font-semibold text-gray-800">Member since</td>
-                <td>
-                  {profile ? new Date(profile.createdAt).toLocaleString() : "N/A"}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
+        <table className="table-auto w-full text-left border-spacing-2 bg-gray-200 rounded-xl p-4">
+          <tbody>
+            <tr>
+              <td className="font-semibold text-gray-800">Name</td>
+              <td>{profile?.name}</td>
+            </tr>
+            <tr>
+              <td className="font-semibold text-gray-800">Email</td>
+              <td>{profile?.email}</td>
+            </tr>
+            <tr>
+              <td className="font-semibold text-gray-800">Tel.</td>
+              <td>{profile?.tel}</td>
+            </tr>
+            <tr>
+              <td className="font-semibold text-gray-800">Current Balance</td>
+              <td>{profile?.balance}</td>
+            </tr>
+            <tr>
+              <td className="font-semibold text-gray-800">Member since</td>
+              <td>{profile ? new Date(profile.createdAt).toLocaleString() : "N/A"}</td>
+            </tr>
+          </tbody>
+        </table>
 
         <div className="flex flex-row gap-x-4 mt-4">
           <Link href="/payment">
@@ -89,11 +89,11 @@ export default function ProfilePage() {
               Top-up
             </button>
           </Link>
-          <Link href="/history">
+          {/* <Link href="/history">
             <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow">
               History
             </button>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </main>

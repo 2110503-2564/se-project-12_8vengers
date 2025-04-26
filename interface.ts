@@ -31,6 +31,7 @@ export interface User {
   email: string;
   role: string;
   tel: string;
+  balance: number;
   createdAt: Date;
 }
 
