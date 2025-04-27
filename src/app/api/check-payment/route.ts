@@ -6,7 +6,7 @@ export async function GET(req: Request) {
   const authHeader = req.headers.get('Authorization') || '';
   const token = authHeader.replace('Bearer ', '');
 
-  const secretKey = process.env.OMISE_SECRET_KEY || "skey_test_ของน้อง";
+  const secretKey = process.env.OMISE_SECRET_KEY;
   const encodedKey = Buffer.from(secretKey + ":").toString("base64");
 
   if (!token) {
@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   }
 
   try {
-    // ✨ ดึงข้อมูล charge เดิม
+    //ดึงข้อมูล charge เดิม
     const chargeRes = await fetch(`https://api.omise.co/charges/${chargeId}`, {
       method: "GET",
       headers: {
@@ -27,7 +27,7 @@ export async function GET(req: Request) {
     if (charge.object === "error") throw new Error(charge.message);
 
     if (charge.status === "successful") {
-      // สำเร็จแล้ว ค่อยไป update balance
+      //update balance
       const backendRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/payment/updateBalance`, {
         method: "POST",
         headers: {

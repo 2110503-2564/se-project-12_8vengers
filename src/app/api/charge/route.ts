@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         currency: "thb",
         source: source.id,
         metadata: {
-          token, // เก็บ token หรือ email ของ user ไว้ก็ได้
+          token,
         },
       }),
     });
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       qrCode: charge.source.scannable_code.image.download_uri,
-      chargeId: charge.id,            // ✅ ส่ง chargeId กลับไปด้วย
+      chargeId: charge.id,
     });
   } catch (err: any) {
     console.error("❌ CHARGE ERROR:", err.message);
