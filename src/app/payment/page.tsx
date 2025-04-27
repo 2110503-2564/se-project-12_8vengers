@@ -2,7 +2,7 @@
 
 import { useState, useEffect, CSSProperties } from 'react';
 import { useSession } from "next-auth/react";
-import getBalance from '@/libs/getBalance';
+import getUserProfile from '@/libs/getUserProfile';
 
 const TopUpForm = () => {
   const { data: session } = useSession();
@@ -13,18 +13,20 @@ const TopUpForm = () => {
   const [chargeId, setChargeId] = useState('');
 
   useEffect(() => {
-    const fetchBalance = async () => {
+    const fetchProfile = async () => {
       try {
-        const res = await getBalance();
-        const data = await res.json();
-        setBalance(data.data?.balance || 0);
+        if (session?.user?.token) {
+          const res = await getUserProfile(session.user.token);
+          setBalance(res.data?.balance || 0);
+        }
       } catch (err) {
-        console.error('Failed to fetch balance:', err);
+        console.error('Failed to fetch user profile:', err);
       }
     };
-
-    fetchBalance();
-  }, []);
+  
+    fetchProfile();
+  }, [session]);
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
