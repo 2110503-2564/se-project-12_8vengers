@@ -56,6 +56,9 @@ export default function Reservation() {
     fetchCoWorkingSpaces();
     setLoading(false);
   }, []);
+  
+  const selectedSpaceObj = coWorkingSpaces.find(space => space._id === selectedSpace);
+
   const updateUserBalance = () => {
     if (profile && selectedSpaceObj) {
       const updatedBalance =
@@ -63,6 +66,47 @@ export default function Reservation() {
       setProfile({ ...profile, balance: updatedBalance });
     }
   };
+
+  const handleConfirmPayment = async () => {
+    if (!selectedSpaceObj || !profile || !reserveDate) return;
+    
+    const price = Number(selectedSpaceObj.price ?? 0);
+    const balance = Number(profile.balance ?? 0);
+
+    if (balance < price) {
+    alert('Insufficient balance, please top-up.');
+    return;
+    }
+
+    const confirmed = window.confirm("Confirm payment?");
+  
+     if (!confirmed) {
+    alert("You cancelled the payment.");
+    return;
+  }
+
+  try {
+    // Call createReservation (จองก่อน)
+    const response = await createReservation(
+      session.user.token,
+      reserveDate.toDate(),
+      selectedSpace
+    );
+
+    if (!response.success) {
+      setMessage(response.message);
+      return;
+    }
+
+    // Update balance (หักเงินใน frontend แสดงผล)
+    updateUserBalance();
+    setMessage("Reservation successful!");
+    alert("Reservation created successfully!");
+  } catch (error) {
+    setMessage("Unexpected error occurred");
+  }
+  };
+  
   const reservationInfoRef = useRef<HTMLDivElement>(null);
 
   const handleReservation = async () => {
@@ -71,7 +115,6 @@ export default function Reservation() {
       return;
     }
 
-    
     try {
       const response = await createReservation(
         session.user.token,
@@ -88,25 +131,14 @@ export default function Reservation() {
       setMessage("Unexpected Error Occured");
     }
   };
-  const handleConfirmPayment = async () => {
-    const confirmed = window.confirm("Confirm payment?");
-  
-    if (confirmed) {
-      await updateUserBalance();
-      alert("Reservation created successfully!");
-    } else {
-      alert("You cancelled the payment.");
-    }
-  };
-  
-  
 
+  
+  
   if (loading) {
     return <div className="text-center text-gray-500 text-lg">Loading...</div>;
   }
 
-  const selectedSpaceObj = coWorkingSpaces.find(space => space._id === selectedSpace);
-
+  
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center space-y-4 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/img/background.avif')" }}>
       <div className="w-[40%] bg-white p-6 rounded-lg shadow-6xl flex flex-col items-center space-y-4 border border-gray-300 mx-auto my-20">
