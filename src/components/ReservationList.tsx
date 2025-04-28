@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import getReservations from "@/libs/getReservations";
+import getCoworkingSpace from "@/libs/getCoworkingSpace";
 import deleteReservation from "@/libs/deleteReservation";
 import { ReservationItem } from "../../interface";
 import { useSession } from "next-auth/react";

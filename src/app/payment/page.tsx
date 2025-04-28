@@ -3,6 +3,7 @@
 import { useState, useEffect, CSSProperties } from 'react';
 import { useSession } from "next-auth/react";
 import getUserProfile from '@/libs/getUserProfile';
+import createTransactions from '@/libs/createTransaction';
 
 const TopUpForm = () => {
   const { data: session } = useSession();
@@ -85,20 +86,10 @@ const TopUpForm = () => {
   
       const data = await res.json();
   
-      if (res.ok && data.success) {
+      if (res.ok && data.success && session) {
         // สร้าง transaction เมื่อชำระเงินสำเร็จ
         try {
-          await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/transactions`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${session?.user?.token}`,
-            },
-            body: JSON.stringify({
-              type: 'topup',
-              amount: parseInt(amount) // จำนวนเงินที่เติม (บาท)
-            }),
-          });
+          await createTransactions(amount, "topup", session.user.token);
         } catch (err) {
           console.error('Failed to create transaction:', err);
         }
