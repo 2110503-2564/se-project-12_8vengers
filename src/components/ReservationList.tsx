@@ -97,7 +97,7 @@ export default function ReservationList() {
                   <button
                     className="rounded-md bg-red-500 hover:bg-red-800 hover:text-white px-3 py-1 text-black shadow-sm text-sm mr-3"
                     onClick={async () => {
-                      const confirmCancel = window.confirm("คุณจะไม่ได้รับเงินคืนแน่นอน ต้องการดำเนินการต่อหรือไม่?");
+                      const confirmCancel = window.confirm("You will not receive a refund. Do you want to proceed?");
                       if (!confirmCancel) return; // ถ้าเลือก 'ยกเลิก' ใน popup ก็ไม่ทำอะไร
 
                       try {
