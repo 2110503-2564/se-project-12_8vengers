@@ -81,61 +81,71 @@ export default function TransactionHistory() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-gray-200 py-12 px-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="p-6 bg-white border-b">
-          <h1 className="text-2xl font-bold text-center text-gray-800">
-            Transaction History
-          </h1>
-        </div>
-
-        <div className="divide-y divide-gray-200">
-          {loading ? (
-            <div className="p-6 text-center text-gray-500">Loading transactions...</div>
-          ) : error ? (
-            <div className="p-6 text-center text-red-500">{error}</div>
-          ) : transactions.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">No transactions found</div>
-          ) : (
-            [...transactions].reverse().map((transaction) => (
-              <div
-                key={transaction._id}
-                className="p-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-3">
-                    <div className="text-2xl">
-                      {renderIcon(transaction.type)}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        {renderTitle(transaction.type)}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {new Date(transaction.createdAt).toLocaleString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                  <p
-                    className={`font-semibold ${
-                      transaction.type === "reserve"
-                        ? "text-red-600"
-                        : "text-green-600"
-                    }`}
-                  >
-                    {renderAmount(transaction.type, transaction.amount)}
-                  </p>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+  <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="p-6 bg-white border-b">
+      <h1 className="text-2xl font-bold text-center text-gray-800">
+        Transaction History
+      </h1>
     </div>
+
+    <div className="p-6 space-y-4"> 
+      {loading ? (
+        <div className="text-center text-gray-500">Loading transactions...</div>
+      ) : error ? (
+        <div className="text-center text-red-500">{error}</div>
+      ) : transactions.length === 0 ? (
+        <div className="text-center text-gray-500">No transactions found</div>
+      ) : (
+        [...transactions].reverse().map((transaction) => (
+          <div
+            key={transaction._id}
+            className={`flex items-center justify-between p-4 rounded-lg transition-colors
+              ${
+                transaction.type === "topup"
+                  ? "border-2 border-green-400"
+                  : transaction.type === "reserve"
+                  ? "border-2 border-orange-300"
+                  : "border-2 border-blue-400"
+              }
+              hover:bg-gray-50
+            `}
+          >
+            <div className="flex items-center space-x-3">
+              <div className="text-2xl">
+                {renderIcon(transaction.type)}
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">
+                  {renderTitle(transaction.type)}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {new Date(transaction.createdAt).toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+              </div>
+            </div>
+
+                <p
+                className={`font-semibold ${
+                    transaction.type === "reserve"
+                    ? "text-red-600"
+                    : "text-green-600"
+                }`}
+                >
+                {renderAmount(transaction.type, transaction.amount)}
+                </p>
+            </div>
+            ))
+        )}
+        </div>
+    </div>
+    </div>
+
+
   );
 }

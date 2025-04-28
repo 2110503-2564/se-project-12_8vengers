@@ -9,6 +9,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import dayjs from 'dayjs';
+
 
 export default function ReservationList() {
   const [reservationItems, setReservationItems] = useState<ReservationItem[]>([]);
@@ -87,7 +89,8 @@ export default function ReservationList() {
                 User: {item.user.name}
               </div>
               <div className="text-md">
-                Reserve Date: {item.reserveDate.toString()}
+                Reserve Date: {dayjs(item.reserveDate).format('DD/MM/YYYY')}
+
               </div>
               <div className="text-md">
                 Co-Working Space: {item.coWorkingSpace.name}

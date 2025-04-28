@@ -32,7 +32,9 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-100 p-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-2xl">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Welcome Back</h1>
+        <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-2">Welcome Back</h1>
+        <p className="text-gray-500 text-center text-sm">Login to your account</p>
+        
 
         {error && (
           <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-center">
