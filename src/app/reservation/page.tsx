@@ -89,7 +89,7 @@ export default function Reservation() {
     // Call createReservation (จองก่อน)
     const response = await createReservation(
       session.user.token,
-      reserveDate.toDate(),
+      reserveDate.startOf('day').add(7, 'hour').toDate(),
       selectedSpace
     );
 
