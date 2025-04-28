@@ -51,7 +51,7 @@ export default function Banner() {
         router.push("/coworkingspace");
         }}
         >
-          Select Co-Working Space
+          Browse Our Catalog Now !
         </button>
       </div>
     </div>

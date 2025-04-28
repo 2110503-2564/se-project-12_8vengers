@@ -25,6 +25,7 @@ export default async function TopMenu() {
             sizes="100vh"
           />
         </NextLink>
+        <TopMenuItem title="Co-Working Spaces" pageRef="/coworkingspace" />
         <TopMenuItem title="My Reservation" pageRef="/myreservation" />
         <TopMenuItem title="Reservation" pageRef="/reservation" />
       </div>
