@@ -68,6 +68,7 @@ export default function Reservation() {
   };
 
   const handleConfirmPayment = async () => {
+    
     if (!selectedSpaceObj || !profile || !reserveDate) return;
     
     const price = Number(selectedSpaceObj.price ?? 0);
@@ -115,21 +116,8 @@ export default function Reservation() {
       return;
     }
 
-    try {
-      const response = await createReservation(
-        session.user.token,
-        reserveDate.toDate(),
-        selectedSpace
-      );
-
-      if (!response.success) {
-        setMessage(response.message);
-        return;
-      }
-
-    } catch (error) {
-      setMessage("Unexpected Error Occured");
-    }
+    setShowReservationDetails(true);
+    setMessage("");
   };
 
   
@@ -183,7 +171,7 @@ export default function Reservation() {
           />
         </div>
 
-        <Button variant="contained" color="primary" onClick={() => setShowReservationDetails(true)}>
+        <Button variant="contained" color="primary" onClick={handleReservation}>
           Reserve Co-Working Space
         </Button>
         
