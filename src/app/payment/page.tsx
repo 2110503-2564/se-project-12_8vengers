@@ -130,21 +130,22 @@ const TopUpForm = () => {
           <p style={styles.minAmountText}>* Minimum 50 Baht</p>
         </div>
 
-        <button type="submit" style={styles.button}>
+        <button type="submit" style={styles.button} className='hover:shadow-xl'>
           Top Up
         </button>
       </form>
 
       {/* QR Code and Check Payment */}
       {qrCodeUrl && (
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <p>Please scan the QR code below to complete your payment:</p>
-          <img src={qrCodeUrl} alt="PromptPay QR" style={{ width: 300, height: 300 }} />
+        <div style={{ textAlign: 'center', marginTop: '20px'}}>
+          <p className='mb-4'>Please scan the QR code below to complete your payment:</p>
+          <img src={qrCodeUrl} alt="PromptPay QR" className="w-[300px] h-[300px] mx-auto block"/>
           <p>Charge ID: {chargeId}</p>
 
           <button
             onClick={handleCheckPayment}
             style={{ ...styles.button, backgroundColor: "#00b894", marginTop: "20px" }}
+            className='hover:shadow-xl'
           >
             Check Payment Status
           </button>
@@ -159,8 +160,11 @@ const TopUpForm = () => {
 
 const styles: { [key: string]: CSSProperties } = {
   container: {
-    maxWidth: '400px',
-    margin: 'auto',
+    maxWidth: '600px',
+    marginTop: '80px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginBottom: 'auto',
     padding: '20px',
     backgroundColor: '#f0f8ff',
     borderRadius: '8px',

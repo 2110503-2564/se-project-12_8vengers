@@ -188,9 +188,9 @@ export default function Reservation() {
         </Button>
         
         {showReservationDetails && (
-          <div ref={reservationInfoRef} className="w-[100%] table-auto border-separate border-spacing-2 bg-gray-200 rounded-xl p-6 mt-6">
-            <h2 className="text-xl font-semibold text-black">Reservation Details</h2>
-            <table className="text-black">
+          <div ref={reservationInfoRef} className="w-[100%] table-auto border-separate border-spacing-2 bg-gray-200 rounded-xl p-5 mt-6">
+            <h2 className="text-xl font-semibold text-black">Payment Details</h2>
+            <table className="w-[100%] text-black mt-3 mb-5">
               <tbody>
                 <tr>
                   <td className="text-md font-semibold">Selected Space :</td>
@@ -202,13 +202,13 @@ export default function Reservation() {
                 </tr>
                 <tr>
                   <td className="font-semibold">Current Balance :</td>
-                  <td>{profile?.balance}</td>
+                  <td>{profile?.balance} Baht</td>
                 </tr>
               </tbody>
             </table>
             <div className="flex justify-center items-center">
-              <Button className="!bg-gray-700 !text-white !text-sm hover:!bg-gray-400 cursor-pointer" onClick={handleConfirmPayment}>
-                Pay
+              <Button className="!bg-gray-700 !px-4 !py-2 !text-white !text-sm hover:!bg-gray-400 cursor-pointer" onClick={handleConfirmPayment}>
+                Confirm Payment
               </Button>
             </div>
           </div>

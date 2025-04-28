@@ -75,7 +75,7 @@ export default function ProfilePage() {
             </tr>
             <tr>
               <td className="px-6 py-4 font-semibold text-gray-700">Current Balance</td>
-              <td>{profile?.balance}</td>
+              <td>{profile?.balance} Baht</td>
             </tr>
             <tr>
               <td className="px-6 py-4 font-semibold text-gray-800">Member since</td>
