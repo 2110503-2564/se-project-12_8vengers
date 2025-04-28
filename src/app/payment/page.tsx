@@ -59,7 +59,7 @@ const TopUpForm = () => {
       if (res.ok && data.qrCode && data.chargeId) {
         setQrCodeUrl(data.qrCode);
         setChargeId(data.chargeId);
-        setMessage('✅ Please scan the QR code to complete your payment.');
+        setMessage('');
       } else {
         setMessage('❌ Top up failed: ' + (data.message || "Unknown error"));
       }
@@ -99,7 +99,7 @@ const TopUpForm = () => {
         setChargeId('');
         window.location.reload();
       } else {
-        setMessage('❗ Payment not completed yet: ' + (data.message || 'Unknown error'));
+        setMessage('❌ Payment not completed yet' );
       }
     } catch (error) {
       console.error('Check payment error:', error);
@@ -110,73 +110,78 @@ const TopUpForm = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.heading}>Top Up Your Balance</h2>
+  <h2 style={styles.heading}>Top Up Your Balance</h2>
 
-      {/* Current Balance */}
-      <div style={styles.inputGroup}>
-        <label style={styles.label}>Current Balance:</label>
-        <input
-          type="text"
-          value={`${balance.toLocaleString()} Baht`}
-          readOnly
-          style={styles.input}
-        />
-      </div>
+  {/* Current Balance */}
+  <div style={styles.inputGroup}>
+    <label style={styles.label}>Current Balance:</label>
+    <input
+      type="text"
+      value={`${balance.toLocaleString()} Baht`}
+      readOnly
+      style={styles.input}
+    />
+  </div>
 
-      {/* Top Up Form */}
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Enter Top-Up Amount (Baht):</label>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            required
-            min="1"
-            style={styles.input}
-          />
-          <p style={styles.minAmountText}>* Minimum 50 Baht</p>
-        </div>
-
-        <button type="submit" style={styles.button} className='hover:shadow-xl'>
-          Top Up
-        </button>
-      </form>
-
-      {/* QR Code and Check Payment */}
-      {qrCodeUrl && (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-green-100 p-4">
-          <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md text-center">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">
-              Complete Your Payment
-            </h1>
-            <p className="text-gray-600 mb-6">
-              Please scan the QR code below to complete your payment:
-            </p>
-        
-            <img
-              src={qrCodeUrl}
-              alt="PromptPay QR"
-              className="w-60 h-60 mx-auto mb-6 rounded-lg shadow-lg"
-            />
-        
-            <p className="text-gray-500 mb-6 text-sm">
-              Charge ID: <span className="font-semibold">{chargeId}</span>
-            </p>
-        
-            <button
-              onClick={handleCheckPayment}
-              className="w-full bg-gradient-to-r from-green-400 to-green-600 text-white font-bold py-3 rounded-lg hover:shadow-xl transition duration-300"
-            >
-              Check Payment Status
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Message */}
-      {message && <p style={styles.message}>{message}</p>}
+  {/* Top Up Form */}
+  <form onSubmit={handleSubmit} style={styles.form}>
+    <div style={styles.inputGroup}>
+      <label style={styles.label}>Please enter Amount (Baht):</label>
+      <input
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        required
+        min="1"
+        style={styles.input}
+      />
+      <p style={styles.minAmountText}>* Minimum amount to top-up 50 Baht</p>
     </div>
+
+    <button type="submit" style={styles.button} className='hover:shadow-xl'>
+      Top Up
+    </button>
+  </form>
+
+  {/* QR Code Section */}
+  {qrCodeUrl && (
+    <div className="bg-white shadow-lg rounded-xl p-6 mt-8 text-center">
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">
+        Complete Your Payment
+      </h1>
+      <p className="text-gray-600 mb-4">
+        Please scan the QR code below to complete your payment:
+      </p>
+
+      <img
+        src={qrCodeUrl}
+        alt="PromptPay QR"
+        className="w-80 h-90 mx-auto mb-5 rounded-lg shadow-2xl"
+      />
+        <p>
+          <div className='text-green-500 mb-1 text-2xl'>
+              {amount} ฿
+          </div>
+          <div className='text-gray-500 mb-2 text-lg'>
+              8vengers Company Limited
+          </div>
+        </p>
+      <p className="text-gray-500 mb-4 text-sm">
+        Charge ID: <span className="font-semibold">{chargeId}</span>
+      </p>
+
+      <button
+        onClick={handleCheckPayment}
+        className="w-full bg-gradient-to-r from-green-600 to-green-600 text-white font-bold py-3 rounded-lg hover:shadow-xl transition duration-300"
+      >
+        Click this button after payment
+      </button>
+      <p style={styles.message}>{message}</p>
+    </div>
+    
+    
+  )}
+</div>
   );
 };
 
