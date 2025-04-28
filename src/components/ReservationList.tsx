@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import getReservations from "@/libs/getReservations";
 import getCoworkingSpace from "@/libs/getCoworkingSpace";
 import deleteReservation from "@/libs/deleteReservation";
+import createTransactions from "@/libs/createTransaction";
 import { ReservationItem } from "../../interface";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -123,6 +124,9 @@ export default function ReservationList() {
                       className="rounded-md bg-red-500 hover:bg-red-800 hover:text-white px-3 py-1 text-black shadow-sm text-sm mr-3"
                       onClick={async () => {
                         try {
+                          const coopJson = await getCoworkingSpace(item.coWorkingSpace._id, session.user.token);
+                          const coopPrice = coopJson.data.price;
+                          await createTransactions(coopPrice, "refund", session.user.token);
                           await deleteReservation(item._id, session.user.token);
                           setReservationItems((prev) =>
                             prev.filter((res) => res._id !== item._id)

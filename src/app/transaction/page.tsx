@@ -96,7 +96,7 @@ export default function TransactionHistory() {
           ) : transactions.length === 0 ? (
             <div className="p-6 text-center text-gray-500">No transactions found</div>
           ) : (
-            transactions.map((transaction) => (
+            [...transactions].reverse().map((transaction) => (
               <div
                 key={transaction._id}
                 className="p-4 hover:bg-gray-50 transition-colors"
