@@ -41,6 +41,9 @@ export const authOptions:AuthOptions = {
         return session;
       }
     },
+    pages: {
+      signIn: '/auth/signin', //ไม่ได้ใช้หน้าล็อกอินdefault ไปที่ /auth/signin แทน
+    }
 };
 // const handler = NextAuth(authOptions)
 // export {handler as GET, handler as POST};
