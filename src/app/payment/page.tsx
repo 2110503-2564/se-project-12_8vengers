@@ -154,18 +154,32 @@ const TopUpForm = () => {
 
       {/* QR Code and Check Payment */}
       {qrCodeUrl && (
-        <div style={{ textAlign: 'center', marginTop: '20px'}}>
-          <p className='mb-4'>Please scan the QR code below to complete your payment:</p>
-          <img src={qrCodeUrl} alt="PromptPay QR" className="w-[300px] h-[300px] mx-auto block"/>
-          <p>Charge ID: {chargeId}</p>
-
-          <button
-            onClick={handleCheckPayment}
-            style={{ ...styles.button, backgroundColor: "#00b894", marginTop: "20px" }}
-            className='hover:shadow-xl'
-          >
-            Check Payment Status
-          </button>
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-green-100 p-4">
+          <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md text-center">
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">
+              Complete Your Payment
+            </h1>
+            <p className="text-gray-600 mb-6">
+              Please scan the QR code below to complete your payment:
+            </p>
+        
+            <img
+              src={qrCodeUrl}
+              alt="PromptPay QR"
+              className="w-60 h-60 mx-auto mb-6 rounded-lg shadow-lg"
+            />
+        
+            <p className="text-gray-500 mb-6 text-sm">
+              Charge ID: <span className="font-semibold">{chargeId}</span>
+            </p>
+        
+            <button
+              onClick={handleCheckPayment}
+              className="w-full bg-gradient-to-r from-green-400 to-green-600 text-white font-bold py-3 rounded-lg hover:shadow-xl transition duration-300"
+            >
+              Check Payment Status
+            </button>
+          </div>
         </div>
       )}
 
