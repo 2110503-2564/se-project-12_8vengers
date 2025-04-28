@@ -1,9 +1,8 @@
 .banner {
     display: block;
-    padding: px;
     margin: 0;
     width: 100vw;
-    height: 800px;
+    height: 100vh;
     position: relative;
 }
 
@@ -17,5 +16,5 @@
 
 .textshadow {
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(0, 0, 0, 0.7);
-  }
+}
   

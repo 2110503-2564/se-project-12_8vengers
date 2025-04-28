@@ -26,11 +26,14 @@ export default function Banner() {
         alt="cover"
         fill
         priority
-        style={{ objectFit: "cover" }}
+        sizes="100vw" 
+        className="object-cover"
+        style={{ objectFit: "cover" }} 
       />
+
       <div
         className="absolute inset-0 bg-gradient-to-b from-black/70 to-transparent"
-        style={{ backdropFilter: "blur(4px)" }}
+        style={{ backdropFilter: "blur(3px)" }}
       />
       <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-4">
         <h1
