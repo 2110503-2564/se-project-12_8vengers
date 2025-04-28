@@ -93,7 +93,7 @@ export default function ProfilePage() {
           </Link>
 
           
-          <Link href="/history">
+          <Link href="/transaction">
             <button className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg shadow transition transform hover:scale-105">
               History
             </button>
