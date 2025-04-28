@@ -107,7 +107,7 @@ export default function CoopDetailPage({ params }: { params: { cid: string } }) 
           width={0}
           height={0}
           sizes="100vw"
-          className="rounded-lg w-[30%] h-auto object-cover"
+          className="rounded-lg w-[40%] h-[420px] object-cover"
         />
         <div className="text-lg mx-5 text-left">
           <div>Name: {coopDetail.name}</div>
