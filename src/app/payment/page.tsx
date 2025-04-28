@@ -49,7 +49,7 @@ const TopUpForm = () => {
           Authorization: `Bearer ${session.user.token}`,
         },
         body: JSON.stringify({
-          amount: parseInt(amount) * 100,
+          amount: parseInt(amount)*100,
         }),
       });
 
@@ -74,7 +74,7 @@ const TopUpForm = () => {
       setMessage('❗ No charge ID found.');
       return;
     }
-
+  
     try {
       const res = await fetch(`/api/check-payment?chargeId=${chargeId}`, {
         method: "GET",
@@ -82,10 +82,27 @@ const TopUpForm = () => {
           Authorization: `Bearer ${session?.user?.token}`,
         },
       });
-
+  
       const data = await res.json();
-
+  
       if (res.ok && data.success) {
+        // สร้าง transaction เมื่อชำระเงินสำเร็จ
+        try {
+          await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/transactions`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${session?.user?.token}`,
+            },
+            body: JSON.stringify({
+              type: 'topup',
+              amount: parseInt(amount) // จำนวนเงินที่เติม (บาท)
+            }),
+          });
+        } catch (err) {
+          console.error('Failed to create transaction:', err);
+        }
+  
         setMessage('✅ Top up completed! Your balance has been updated.');
         setQrCodeUrl('');
         setChargeId('');
