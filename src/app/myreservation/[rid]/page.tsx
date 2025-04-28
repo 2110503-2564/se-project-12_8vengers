@@ -37,7 +37,7 @@ export default function EditReservation() {
     try {
       const response = await updateReservation(
         rid as string,
-        reserveDate.toDate(),
+        reserveDate.startOf('day').add(7, 'hour').toDate(),
         session.user.token
       );
 

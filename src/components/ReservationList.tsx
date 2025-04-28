@@ -93,26 +93,42 @@ export default function ReservationList() {
 
               <div className="flex justify-start mt-2">
                 {/* Show Cancel and Edit buttons only if the reservation is after today */}
+                {reserveDateStr === todayStr && (
+                  <button
+                    className="rounded-md bg-red-500 hover:bg-red-800 hover:text-white px-3 py-1 text-black shadow-sm text-sm mr-3"
+                    onClick={async () => {
+                      const confirmCancel = window.confirm("คุณจะไม่ได้รับเงินคืนแน่นอน ต้องการดำเนินการต่อหรือไม่?");
+                      if (!confirmCancel) return; // ถ้าเลือก 'ยกเลิก' ใน popup ก็ไม่ทำอะไร
+
+                      try {
+                        await deleteReservation(item._id, session.user.token);
+                        setReservationItems((prev) =>
+                          prev.filter((res) => res._id !== item._id)
+                        );
+                        showSnackbar("Reservation canceled successfully (No refund)");
+                      } catch (err: any) {
+                        console.error("Failed to cancel reservation:", err);
+                        showSnackbar(err?.response?.data?.message || "Failed to cancel reservation");
+                      }
+                    }}
+                  >
+                    Cancel Reservation
+                  </button>
+                )}
+
                 {reserveDateStr > todayStr && (
                   <>
                     <button
                       className="rounded-md bg-red-500 hover:bg-red-800 hover:text-white px-3 py-1 text-black shadow-sm text-sm mr-3"
                       onClick={async () => {
                         try {
-                          // Call API to cancel reservation and process refund
                           await deleteReservation(item._id, session.user.token);
-
-                          // Update the reservation list by removing the canceled reservation
                           setReservationItems((prev) =>
                             prev.filter((res) => res._id !== item._id)
                           );
-                          
-                          // Show a success message
                           showSnackbar("Reservation canceled and refunded successfully");
                         } catch (err: any) {
                           console.error("Failed to cancel reservation:", err);
-
-                          // Show error message from backend if cancellation is past the deadline or reservation is in the past
                           showSnackbar(err?.response?.data?.message || "Failed to cancel or refund reservation");
                         }
                       }}
@@ -123,14 +139,8 @@ export default function ReservationList() {
                     <button
                       className="rounded-md bg-blue-600 hover:bg-green-600 px-3 py-1 text-white shadow-sm text-sm mr-3"
                       onClick={() => {
-                        sessionStorage.setItem(
-                          "coWorkingSpace",
-                          JSON.stringify(item.coWorkingSpace)
-                        );
-                        sessionStorage.setItem(
-                          "userName",
-                          JSON.stringify(item.user)
-                        );
+                        sessionStorage.setItem("coWorkingSpace", JSON.stringify(item.coWorkingSpace));
+                        sessionStorage.setItem("userName", JSON.stringify(item.user));
                         router.push(`/myreservation/${item._id}`);
                       }}
                     >
@@ -138,6 +148,7 @@ export default function ReservationList() {
                     </button>
                   </>
                 )}
+
               </div>
             </div>
           );
