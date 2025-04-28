@@ -93,6 +93,21 @@ export default function Reservation() {
       reserveDate.startOf('day').add(7, 'hour').toDate(),
       selectedSpace
     );
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/transactions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.user?.token}`,
+        },
+        body: JSON.stringify({
+          type: 'reserve',
+          amount: parseInt(selectedSpaceObj.price) // จำนวนเงินที่เติม (บาท)
+        }),
+      });
+    } catch (err) {
+      console.error('Failed to create transaction:', err);
+    }
 
     if (!response.success) {
       setMessage(response.message);
