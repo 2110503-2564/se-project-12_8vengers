@@ -141,7 +141,11 @@ const TopUpForm = () => {
     <button type="submit" style={styles.button} className='hover:shadow-xl'>
       Top Up
     </button>
-  </form>
+    {message && (
+    <p style={{  color: 'red' }}>{message}</p>
+    )}
+    </form>
+
 
   {/* QR Code Section */}
   {qrCodeUrl && (

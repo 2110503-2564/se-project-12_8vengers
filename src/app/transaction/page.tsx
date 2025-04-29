@@ -3,6 +3,13 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { FaWallet, FaUndoAlt, FaCalendarCheck } from "react-icons/fa";
 
+const isBrowser = typeof window !== "undefined";
+
+const BASE_URL = isBrowser
+  ? "http://localhost:5003"
+  : process.env.NEXT_PUBLIC_BACKEND_URL;
+
+
 interface Transaction {
   _id: string;
   type: "topup" | "reserve" | "refund";
@@ -28,12 +35,13 @@ export default function TransactionHistory() {
       }
 
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/transactions`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${session.user.token}`,
-          },
+        const response = await fetch(`${BASE_URL}/api/v1/transactions`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${session.user.token}`,
+            },
         });
+
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -102,9 +110,9 @@ export default function TransactionHistory() {
             className={`flex items-center justify-between p-4 rounded-lg transition-colors
               ${
                 transaction.type === "topup"
-                  ? "border-2 border-green-400"
+                  ? "border-2 border-green-500"
                   : transaction.type === "reserve"
-                  ? "border-2 border-orange-300"
+                  ? "border-2 border-orange-400"
                   : "border-2 border-blue-400"
               }
               hover:bg-gray-50

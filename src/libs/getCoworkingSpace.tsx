@@ -1,6 +1,12 @@
+const isBrowser = typeof window !== "undefined";
+
+const BASE_URL = isBrowser
+  ? "http://localhost:5003"
+  : process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export default async function getCoworkingSpace(cid:string, token:string) {
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coWorkingSpaces/${cid}`, {
+    const response = await fetch(`${BASE_URL}/api/v1/coWorkingSpaces/${cid}`, {
         method: "GET",
         headers: {
             authorization: `Bearer ${token}`

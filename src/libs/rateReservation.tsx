@@ -1,6 +1,12 @@
+const isBrowser = typeof window !== "undefined";
+
+const BASE_URL = isBrowser
+  ? "http://localhost:5003"
+  : process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export default async function rateVenue(cid: string, rating: number, token: string) {
   console.log("Sending rating:", rating);
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coWorkingSpaces/${cid}/rate`, {
+  const response = await fetch(`${BASE_URL}/api/v1/coWorkingSpaces/${cid}/rate`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,

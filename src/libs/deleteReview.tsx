@@ -1,9 +1,15 @@
+const isBrowser = typeof window !== "undefined";
+
+const BASE_URL = isBrowser
+  ? "http://localhost:5003"
+  : process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export default async function deleteReview(
     token: string,
     reviewId: string
   ) {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/reviews/${reviewId}`,
+      `${BASE_URL}/api/v1/reviews/${reviewId}`,
       {
         method: "DELETE",
         headers: {

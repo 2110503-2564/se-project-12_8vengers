@@ -16,6 +16,7 @@ export default function ProfilePage() {
       try {
         if (session?.user?.token) {
           const response = await getUserProfile(session.user.token);
+          console.log("USER PROFILE RESPONSE:", response);
           setProfile(response.data);
         }
       } catch (error) {

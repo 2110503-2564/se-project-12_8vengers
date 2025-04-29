@@ -135,8 +135,6 @@ export default function Reservation() {
     setMessage("");
   };
 
-  
-  
   if (loading) {
     return <div className="text-center text-gray-500 text-lg">Loading...</div>;
   }

@@ -178,7 +178,7 @@ export default function ReviewFormPage() {
           <div className="font-semibold text-xl mb-4">Your Comments</div>
 
           {oldComments.length > 0 ? (
-            oldComments.map((review, index) => (
+            oldComments.reverse().map((review, index) => (
               <Card key={review._id} variant="outlined" className="mb-4">
                 <CardContent>
                   <div className="whitespace-pre-line text-lg mb-2">
