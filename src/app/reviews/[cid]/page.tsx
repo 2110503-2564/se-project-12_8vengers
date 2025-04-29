@@ -82,7 +82,10 @@ export default function ReviewFormPage() {
 
       if (res.success) {
         alert("Review submitted successfully!");
-        router.push("/coworkingspace/" + coWorkingSpaceId);
+        setMessage("Review submitted successfully!");
+        setTimeout(() => {
+          router.push("/coworkingspace/" + coWorkingSpaceId);
+        }, 2500);
       } else {
         setMessage(res.message || "Failed to submit review.");
       }
@@ -109,20 +112,24 @@ export default function ReviewFormPage() {
         editingComment as string,
         editedText
       );
-      setMessage("Review updated successfully.");
+      
       setEditingComment(null);
       setEditedText("");
-  
+
+      setMessage("Review updated successfully.");
+      setTimeout(() => {
+        router.push("/coworkingspace/" + coWorkingSpaceId);
+      }, 2500);
+
+      // รีเฟรชรีวิวหลังจาก setTimeout หรือ ทำแบบแยกกันก็ได้
       if (session) {
         const refresh = await getReview(session.user.token, coWorkingSpaceId);
-
+      
         if (refresh?.data && Array.isArray(refresh.data)) {
           if (refresh.data.length === 0) {
-            setMessage("You haven't written a review yet.");
             setOldComments([]);
           } else {
             setOldComments(refresh.data);
-            setMessage("");
           }
         }
       }
@@ -212,12 +219,14 @@ export default function ReviewFormPage() {
               fullWidth
               variant="outlined"
               value={newComment}
+              name="comment"
               onChange={(e) => setNewComment(e.target.value)}
               className=""
             />
 
             <Button
               variant="contained"
+              name="submitcomment"
               color="primary"
               fullWidth
               onClick={handleSubmit}
@@ -241,6 +250,7 @@ export default function ReviewFormPage() {
           <div className="font-semibold text-lg mb-4">Edit Comment</div>
           <TextField
             label="Content"
+            name="editcomment"
             multiline
             rows={4}
             value={editedText}
@@ -250,7 +260,7 @@ export default function ReviewFormPage() {
           />
           <Box sx={{ mt: 2, textAlign: "right" }}>
             <Button onClick={() => setEditingComment(null)}>Cancel</Button>
-            <Button color="primary" onClick={handleSaveEdit} sx={{ ml: 2 }}>
+            <Button color="primary" name="save" onClick={handleSaveEdit} sx={{ ml: 2 }}>
               Save
             </Button>
           </Box>
