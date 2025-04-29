@@ -1,0 +1,22 @@
+# docker-compose.yml
+version: '3'
+services:
+  backend:
+    build: ./se-project-backend-12_8vengers
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./se-project-backend-12_8vengers:/app
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build: ./se-project-12_8vengers
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./se-project-12_8vengers:/app
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
